@@ -9,7 +9,7 @@
 	each step.
 -}
 
-data Term = Const Int | Add Term Term | Sub Term Term | Mul Term Term
+data Term = Const Int | Add Term Term | Sub Term Term | Mul Term Term | Div Term Term
 --data Output = String
 --data State = State Output Term
 
@@ -18,3 +18,4 @@ eval (Const a) = a
 eval (Add x y) = (eval x) + (eval y)
 eval (Sub x y) = (eval x) - (eval y)
 eval (Mul x y) = (eval x) * (eval y)
+eval (Div x y) = div (eval x) (eval y)
