@@ -16,6 +16,9 @@ data Output = Exception String | Result Int deriving (Show)
 eval :: Term -> Output
 eval (Const a) = Result a
 eval (Div x y) = tryOp (eval x) (eval y) (div)
+eval (Add x y) = tryOp (eval x) (eval y) (+)
+eval (Sub x y) = tryOp (eval x) (eval y) (-)
+eval (Mul x y) = tryOp (eval x) (eval y) (*)
   
 tryOp :: Output -> Output -> (Int -> Int -> Int) -> Output
 tryOp (Exception p) _ _ = Exception p
@@ -23,7 +26,3 @@ tryOp _ (Exception p) _ = Exception p
 tryOp (Result 0)  _ _ = Exception "Divided by zero"
 tryOp _ (Result 0) _ = Exception "Divided by zero"
 tryOp (Result x) (Result y) op = Result (op x y)
---eval (Add x y) = (eval x) + (eval y)
---eval (Sub x y) = (eval x) - (eval y)
---eval (Mul x y) = (eval x) * (eval y)
---eval (Div x y) = div (eval x) (eval y)
