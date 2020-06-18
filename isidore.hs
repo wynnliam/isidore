@@ -21,6 +21,24 @@ eval (Div x y) =
       res = tryOp (snd a) (snd b) (div)
   in ((fst a) ++ (fst b) ++ (line (Div x y) res), res)
 
+eval (Mul x y) =
+  let a = eval x
+      b = eval y
+      res = tryOp (snd a) (snd b) (*)
+  in ((fst a) ++ (fst b) ++ (line (Mul x y) res), res)
+
+eval (Add x y) =
+  let a = eval x
+      b = eval y
+      res = tryOp (snd a) (snd b) (+)
+  in ((fst a) ++ (fst b) ++ (line (Add x y) res), res)
+
+eval (Sub x y) =
+  let a = eval x
+      b = eval y
+      res = tryOp (snd a) (snd b) (-)
+  in ((fst a) ++ (fst b) ++ (line (Add x y) res), res)
+
 line :: Term -> Output -> String
 line t q = (show t) ++ " = " ++ show q ++ "\n"
 --eval (Add x y) = tryOp (eval x) (eval y) (+)
