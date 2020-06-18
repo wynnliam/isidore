@@ -10,12 +10,20 @@
 -}
 
 data Term = Const Int | Add Term Term | Sub Term Term | Mul Term Term | Div Term Term
---data Output = String
+data Output = Exception String | Result Int deriving (Show)
 --data State = State Output Term
 
-eval :: Term -> Int
-eval (Const a) = a
-eval (Add x y) = (eval x) + (eval y)
-eval (Sub x y) = (eval x) - (eval y)
-eval (Mul x y) = (eval x) * (eval y)
-eval (Div x y) = div (eval x) (eval y)
+eval :: Term -> Output
+eval (Const a) = Result a
+eval (Div x y) = attemptDiv (eval x) (eval y)
+  
+attemptDiv :: Output -> Output -> Output
+attemptDiv (Exception p) _ = Exception p
+attemptDiv _ (Exception p) = Exception p
+attemptDiv (Result 0)  _ = Exception "Divided by zero"
+attemptDiv _ (Result 0) = Exception "Divided by zero"
+attemptDiv (Result x) (Result y) = Result (div x y)
+--eval (Add x y) = (eval x) + (eval y)
+--eval (Sub x y) = (eval x) - (eval y)
+--eval (Mul x y) = (eval x) * (eval y)
+--eval (Div x y) = div (eval x) (eval y)
