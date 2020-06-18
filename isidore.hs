@@ -37,14 +37,11 @@ eval (Sub x y) =
   let a = eval x
       b = eval y
       res = tryOp (snd a) (snd b) (-)
-  in ((fst a) ++ (fst b) ++ (line (Add x y) res), res)
+  in ((fst a) ++ (fst b) ++ (line (Sub x y) res), res)
 
 line :: Term -> Output -> String
 line t q = (show t) ++ " = " ++ show q ++ "\n"
---eval (Add x y) = tryOp (eval x) (eval y) (+)
---eval (Sub x y) = tryOp (eval x) (eval y) (-)
---eval (Mul x y) = tryOp (eval x) (eval y) (*)
---  
+
 tryOp :: Output -> Output -> (Int -> Int -> Int) -> Output
 tryOp (Exception p) _ _ = Exception p
 tryOp _ (Exception p) _ = Exception p
