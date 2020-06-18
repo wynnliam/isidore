@@ -15,14 +15,14 @@ data Output = Exception String | Result Int deriving (Show)
 
 eval :: Term -> Output
 eval (Const a) = Result a
-eval (Div x y) = attemptDiv (eval x) (eval y)
+eval (Div x y) = tryOp (eval x) (eval y)
   
-attemptDiv :: Output -> Output -> Output
-attemptDiv (Exception p) _ = Exception p
-attemptDiv _ (Exception p) = Exception p
-attemptDiv (Result 0)  _ = Exception "Divided by zero"
-attemptDiv _ (Result 0) = Exception "Divided by zero"
-attemptDiv (Result x) (Result y) = Result (div x y)
+tryOp :: Output -> Output -> Output
+tryOp (Exception p) _ = Exception p
+tryOp _ (Exception p) = Exception p
+tryOp (Result 0)  _ = Exception "Divided by zero"
+tryOp _ (Result 0) = Exception "Divided by zero"
+tryOp (Result x) (Result y) = Result (div x y)
 --eval (Add x y) = (eval x) + (eval y)
 --eval (Sub x y) = (eval x) - (eval y)
 --eval (Mul x y) = (eval x) * (eval y)
