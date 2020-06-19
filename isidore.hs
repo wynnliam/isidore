@@ -9,53 +9,14 @@
 	each step.
 -}
 
-
-data Term = Const Int | Div Term Term deriving (Show)
-data Output = Exception String | Result Int deriving (Show)
---type State = (String, Output)
+data Term = Const Int | Add Term Term | Sub Term Term | Mul Term Term | Div Term Term deriving (Show)
 
 eval :: Term -> IO Int
-eval (Const a) = do
-  putStr ((show (Const a)) ++ " = " ++ (show a) ++ "\n")
-  return a
+eval (Const a) = (line (Const a) a) >> (return a)
+eval (Add x y) = (eval x) >>= (\p -> (eval y) >>= (\q -> (line (Add x y) (p + q)) >> (return (p + q))))
+eval (Sub x y) = (eval x) >>= (\p -> (eval y) >>= (\q -> (line (Sub x y) (p - q)) >> (return (p - q))))
+eval (Mul x y) = (eval x) >>= (\p -> (eval y) >>= (\q -> (line (Mul x y) (p * q)) >> (return (p * q))))
+eval (Div x y) = (eval x) >>= (\p -> (eval y) >>= (\q -> (line (Div x y) (div p q)) >> (return (div p q))))
 
-line :: Term -> Output -> String
-line t q = (show t) ++ " = " ++ show q ++ "\n"
-
---data Term = Const Int | Add Term Term | Sub Term Term | Mul Term Term | Div Term Term deriving (Show)
---
---eval :: Term -> State
---eval (Const a) = ((line (Const a) (Result a)), (Result a))
---eval (Div x y) =
---  let a = eval x
---      b = eval y
---      res = tryOp (snd a) (snd b) (div)
---  in ((fst a) ++ (fst b) ++ (line (Div x y) res), res)
---
---eval (Mul x y) =
---  let a = eval x
---      b = eval y
---      res = tryOp (snd a) (snd b) (*)
---  in ((fst a) ++ (fst b) ++ (line (Mul x y) res), res)
---
---eval (Add x y) =
---  let a = eval x
---      b = eval y
---      res = tryOp (snd a) (snd b) (+)
---  in ((fst a) ++ (fst b) ++ (line (Add x y) res), res)
---
---eval (Sub x y) =
---  let a = eval x
---      b = eval y
---      res = tryOp (snd a) (snd b) (-)
---  in ((fst a) ++ (fst b) ++ (line (Sub x y) res), res)
---
---line :: Term -> Output -> String
---line t q = (show t) ++ " = " ++ show q ++ "\n"
---
---tryOp :: Output -> Output -> (Int -> Int -> Int) -> Output
---tryOp (Exception p) _ _ = Exception p
---tryOp _ (Exception p) _ = Exception p
---tryOp (Result 0)  _ (div) = Exception "Divided by zero"
---tryOp _ (Result 0) (div) = Exception "Divided by zero"
---tryOp (Result x) (Result y) op = Result (op x y)
+line :: Term -> Int -> IO ()
+line t r = putStr ((show t) ++ " = " ++ (show r) ++ "\n")
